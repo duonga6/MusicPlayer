@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./asset/css/style.css">
+</head>
+<body>
+    <div class="player">
+        <div class="dashboard">
+            <div class="header">
+                <p class="playing-head">Now playing:</p>
+                <p class="song-name">Bài hát đang phát</p>
+                <p class="singer-name">Ca sĩ</p>
+            </div>
+            <div class="cd">
+                <img src="./asset/img/nosong.png" alt="" class="cd-thumb">
+            </div>
+            <div class="control">
+                <div class="loop control-btn">
+                    <i class="fa-solid control-icon fa-rotate-right"></i>
+                </div>
+                <div class="back control-btn">
+                    <i class="fa-solid control-icon fa-backward-step"></i>
+                </div>
+                <div class="play-pause control-btn">
+                    <i style="margin-left: 5px;" class="fa-solid play-btn control-icon big fa-play"></i>
+                    <i class="fa-solid pause-btn control-icon big fa-pause"></i>
+                </div>
+                <div class="next control-btn">
+                    <i class="fa-solid control-icon fa-forward-step"></i>
+                </div>
+                <div class="random control-btn">
+                    <i class="fa-solid control-icon fa-shuffle"></i>
+                </div>
+            </div>
+            
+            <p class="time">
+                <span class="current-time">0:00</span>
+                /
+                <span class="total-time">0:00</span>
+            </p>
+
+            <input type="range" name="process" class="process" value="0" step="1" min="0" max="100">
+            <audio id="audio" src=""></audio>
+        </div>
+        <ul class="song-list">
+            
+        </ul>
+    </div>
+</div>
+
+    <script src="./asset/js/main.js"></script>
+</body>
+</html>
