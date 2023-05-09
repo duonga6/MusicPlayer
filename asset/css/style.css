@@ -15,7 +15,7 @@ html {
 }
 
 .player {
-    width: 450px;
+    max-width: 450px;
     margin: 0 auto;
     border-radius: 8px;
     position: relative;
@@ -25,7 +25,8 @@ html {
     position: fixed;
     top: 0;
     z-index: 1;
-    width: 450px;
+    width: 100%;
+    max-width: 450px;
     padding: 0 16px 16px;
     background-color: #fff;
     border-top-left-radius: 8px;
@@ -73,6 +74,7 @@ html {
     height: 250px;
     border-radius: 50%;
     z-index: 1;
+    transition: all .1s linear;
 }
 
 .control {
@@ -148,8 +150,8 @@ html {
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
     position: absolute;
-    top: 500px;
-    width: 450px;
+    top: 496px;
+    width: 100%;
 }
 
 .song-container {
@@ -162,6 +164,10 @@ html {
     border-radius: 8px;
     margin-bottom: 12px;
     transition: all .1s linear;
+}
+
+.song-container:active {
+    opacity: .9;
 }
 
 .song-container:last-child {
@@ -224,17 +230,22 @@ html {
     display: none;
 }
 
-.song-container.active .isPlaying {
+.song-container.active .isPlaying i{
     display: block;
 }
 
 .isPlaying {
-    font-size: 28px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 12px;
+}
+
+.isPlaying i {
     color: var(--primary-color);
+    font-size: 28px;
     display: none;
 }
 

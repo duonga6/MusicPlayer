@@ -13,10 +13,16 @@ const nextBtn = $('.next');
 const prevBtn = $('.back');
 const totalTime = $('.total-time');
 const currentTime = $('.current-time');
+const randomBtn = $('.random.control-btn');
+const repeatBtn = $('.loop.control-btn');
+
+
 
 const app = {
     currentIndex: 0,
     isPlaying: false,
+    isRandom: false,
+    isRepeat: false,
     songs: [
         {
             name: 'Là Anh',
@@ -99,9 +105,9 @@ const app = {
     ],
 
     render: function() {
-        const htmls = this.songs.map(song => {
+        const htmls = this.songs.map((song, index) => {
             return `
-            <li class="song-container">
+            <li class="song-container" data-index="${index}">
                 <div class="song-item-img">
                     <img src="${song.image}" alt="">
                 </div>
@@ -123,7 +129,7 @@ const app = {
     },
     handleEvents: function() {
         const _this = this;
-        const sCD = $('.isPlaying');
+        const sCD = $$('.isPlaying');
 
         // Xử lý phóng to thủ nhỏ cd
         const cdHeight = cd.offsetHeight;
@@ -146,14 +152,18 @@ const app = {
 
         cdAnimate.pause();
 
-        const sCdAnimate = sCD.animate([
-            { transform: 'rotate(360deg)'}
-        ],{
-            duration: 10000,
-            iterations: Infinity
-        });
+        const sCDAnimate = Array.from(sCD).map((cd) => {
+            return cd.animate([
+                { transform: 'rotate(360deg)'}
+            ], {
+                duration: 10000,
+                iterations: Infinity
+            });
+        })
 
-        sCdAnimate.pause();
+        sCDAnimate.forEach((s) => {
+            s.pause();
+        })
 
         // Xử lý khi click play
         playBtn.onclick = function() {
@@ -168,16 +178,18 @@ const app = {
         audio.onplay = function() {
             _this.isPlaying = true;
             player.classList.add('playing');
+            // Chạy cd của song đang phát
             cdAnimate.play();
-            sCdAnimate.play();
+            sCDAnimate[_this.currentIndex].play();
         };
 
         // Khi song được pause
         audio.onpause = function() {
             _this.isPlaying = false;
             player.classList.remove('playing');
+            // Dừng cd của sonng đang phát
             cdAnimate.pause();
-            sCdAnimate.pause();
+            sCDAnimate[_this.currentIndex].pause();
         };
 
         // Khi tiến độ bài hát thay đổi
@@ -207,17 +219,67 @@ const app = {
         // Xử lý khi tua
         process.onchange = function(e) {
             audio.currentTime = audio.duration / 100 * e.target.value;
-        };
+        }
 
         // Xử lý khi ấn next
         nextBtn.onclick = function() {
-            _this.nextSong();
+            if (_this.isRandom)
+                _this.randomSong();
+            else
+                _this.nextSong();
+            audio.play();
+            _this.scrollToActiveSong();
         }
 
         // Xử lý khi ấn prev
         prevBtn.onclick = function() {
-            _this.prevSong();
+            if (_this.isRandom)
+                _this.randomSong();
+            else
+                _this.prevSong();
+            audio.play();
+            _this.scrollToActiveSong();
         }
+
+        // Xử lý khi bật tắt random
+        randomBtn.onclick = function() {
+            _this.isRandom = !_this.isRandom;
+            randomBtn.classList.toggle('active', _this.isRandom);
+        }
+
+        // Xử lý khi bật tắt repeat
+        repeatBtn.onclick = function() {
+            _this.isRepeat =!_this.isRepeat;
+            this.classList.toggle('active', _this.isRepeat);
+        }
+
+
+        // Xử lý khi ended song
+        audio.onended = function() {
+            if (_this.isRepeat)
+                audio.play();
+            else
+                nextBtn.click();
+        }
+
+        // Phát bài hát khi click
+        listSongs.onclick = function(e) {
+            const songNodeNoActive = e.target.closest('.song-container:not(.active)');
+            const songNode = e.target.closest('.song-container');
+            const moreNode = e.target.closest('.song-item-more');
+            // Xử lý click vào bài hát
+            if (songNodeNoActive && !moreNode) {
+                _this.currentIndex = Number(songNodeNoActive.getAttribute('data-index'));
+                _this.loadCurrentSong();
+                audio.play();
+            }
+
+            // Xử lý khi click vào nút more
+            if (songNode && moreNode) {
+                console.log(songNode.getAttribute('data-index'));
+            }
+        }
+
     },
     defindProperties: function() {
         Object.defineProperty(this, 'currentSong', {
@@ -251,14 +313,37 @@ const app = {
         if (this.currentIndex > this.songs.length - 1)
             this.currentIndex = 0;
         this.loadCurrentSong();
-        audio.play();
     },
     prevSong: function() {
         this.currentIndex--;
         if (this.currentIndex < 0)
             this.currentIndex = this.songs.length - 1;
         this.loadCurrentSong();
-        audio.play();
+    },
+    randomSong: function() {
+        let newIndex;
+        do {
+            newIndex = Math.floor(Math.random() * this.songs.length);
+        } while (newIndex === this.currentIndex);
+        this.currentIndex = newIndex;
+        this.loadCurrentSong();
+    },
+    scrollToActiveSong: function() {
+        if (this.currentIndex <= 4) {
+            setTimeout(function() {
+                $('.song-container.active').scrollIntoView({
+                    behavior:'smooth',
+                    block:'end',
+                })
+            },200)
+        } else {
+        setTimeout(function() {
+            $('.song-container.active').scrollIntoView({
+                behavior:'smooth',
+                block:'nearest',
+            })
+        },200)
+        }
     },
     start: function() {
         // Định nghĩa các thuộc tính cho obj
