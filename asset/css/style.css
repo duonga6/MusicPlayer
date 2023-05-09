@@ -31,6 +31,7 @@ html {
     background-color: #fff;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
+    transition: all .1s linear;
     border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
@@ -62,12 +63,6 @@ html {
     align-items: center;
     justify-content: center;
     margin-top: 16px;
-}
-
-.cd-thumb-shadow {
-    width: 500px;
-    position: absolute;
-    opacity: .1;
 }
 
 .cd-thumb {
@@ -114,18 +109,28 @@ html {
     color: var(--primary-color);
 }
 
-.time {
-    text-align: right;
+.current-time, .total-time {
     font-size: 12px;
     line-height: 14px;
     font-weight: bold;
     color: var(--primary-color);
+    width: 36px;
+}
+
+.total-time {
+    text-align: right;
+}
+
+.time-container {
+    margin-top: 26px;
+    display: flex;
+    align-items: center;
 }
 
 .process {
     -webkit-appearance: none;  /* Override default CSS styles */
     appearance: none;
-    width: 100%; /* Full-width */
+    flex: 1;
     height: 6px; /* Specified height */
     background: #d3d3d3; /* Grey background */
     outline: none; /* Remove outline */
@@ -133,6 +138,7 @@ html {
     -webkit-transition: .2s; /* 0.2 seconds transition on hover */
     transition: opacity .2s;
     cursor: pointer;
+    margin: 0 8px;
 }
 
 .process::-webkit-slider-thumb {

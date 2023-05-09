@@ -23,6 +23,7 @@ const app = {
     isPlaying: false,
     isRandom: false,
     isRepeat: false,
+    isScrolling: false, // Biến gán cờ xử lý khi tua
     songs: [
         {
             name: 'Là Anh',
@@ -194,31 +195,41 @@ const app = {
 
         // Khi tiến độ bài hát thay đổi
         audio.ontimeupdate = function() {
-            if (this.duration && this.duration > 0) {
-                const currentMinute = Math.floor(this.duration / 60);
-                const currentSecond = Math.floor(this.duration % 60);
-                if (currentSecond < 10)
-                    totalTime.innerHTML = `${currentMinute}:0${currentSecond}`;
-                else
-                totalTime.innerHTML = `${currentMinute}:${currentSecond}`;
-            }
-            setInterval(() => {
-                if (this.currentTime) {
-                    const processPercent = Math.floor(this.currentTime / this.duration * 100);
-                    process.value = processPercent;
-                    const currentMinute = Math.floor(this.currentTime / 60);
-                    const currentSecond = Math.floor(this.currentTime % 60);
-                    if (currentSecond < 10)
-                        currentTime.innerHTML = `${currentMinute}:0${currentSecond}`;
-                    else
-                    currentTime.innerHTML = `${currentMinute}:${currentSecond}`;
+            if (!_this.isScrolling) {
+                if (this.duration && this.duration > 0) {
+                    const currentMinute = Math.floor(this.duration / 60);
+                    const currentSecond = Math.floor(this.duration % 60);
+                    const totalTimeFormatted = `${currentMinute.toString().padStart(2, '0')}:${currentSecond.toString().padStart(2, '0')}`;
+                    totalTime.innerHTML = totalTimeFormatted;
                 }
-            }, 1000);
+                // setInterval(() => {
+                    if (this.currentTime) {
+                        const processPercent = Math.floor(this.currentTime / this.duration * 100);
+                        process.value = processPercent;
+                        const currentMinute = Math.floor(this.currentTime / 60);
+                        const currentSecond = Math.floor(this.currentTime % 60);
+                        const currentTimeFormatted = `${currentMinute.toString().padStart(2, '0')}:${currentSecond.toString().padStart(2, '0')}`;
+                        currentTime.innerHTML = currentTimeFormatted;
+                    }
+                // }, 1000);
+            }
         }
 
         // Xử lý khi tua
         process.onchange = function(e) {
             audio.currentTime = audio.duration / 100 * e.target.value;
+        }
+
+        // Khi click vào tua
+        process.onmousedown = function(e) {
+            _this.isScrolling = true;
+            console.log('down');
+        }
+
+        // Khi không click vào tua
+        process.onmouseup = function(e) {
+            _this.isScrolling = false;
+            console.log('up');
         }
 
         // Xử lý khi ấn next
